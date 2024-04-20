@@ -1,4 +1,8 @@
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+
+#define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>
 
 #define ll long long
 #define endl "\n"
@@ -7,6 +11,7 @@
     cin.tie(NULL);                                                                                                     \
     cout.tie(NULL)
 
+using namespace __gnu_pbds;
 using namespace std;
 
 int main()
@@ -16,31 +21,19 @@ int main()
     int n, k;
     cin >> n >> k;
 
-    int count = n, i = 0;
-    int kill = k;
+    ordered_set s;
 
-    vector<bool> v(n, true);
+    for (int i = 1; i <= n; i++)
+        s.insert(i);
 
-    while (count)
+    int pos = 0;
+
+    while (s.size() > 0)
     {
-        if (v[i])
-        {
-            if (!kill)
-            {
-                v[i] = false;
-                kill = k;
-                count--;
-                cout << i + 1 << ' ';
-                i += k;
-            }
-            else
-            {
-                kill -= k;
-            }
-        }
-        else
-            i++;
-        i %= n;
+        pos = (pos + k) % s.size();
+        auto it = s.find_by_order(pos);
+        cout << *it << " ";
+        s.erase(it);
     }
 
     return 0;
