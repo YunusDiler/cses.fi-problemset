@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 
 #define int long long
+#define endl '\n'
 
 using namespace std;
 
@@ -17,6 +18,17 @@ int range(int left, int right, int node = 1)
     if (l >= left && right >= r) return tree[node];
     else if (r < left || right < l) return INT_MAX;
     else return min(range(left, right, node * 2), range(left, right, node * 2 + 1));
+}
+
+void update(int index, int value)
+{
+    tree[index] = value;
+    index >>= 1;
+    while (index)
+    {
+        tree[index] = min(tree[index * 2], tree[index * 2 + 1]);
+        index >>= 1;
+    }
 }
 
 
@@ -52,8 +64,11 @@ int32_t main()
 
     while (q--)
     {
-        int l, r; cin >> l >> r;
-        cout << range(l + N - 1, r + N - 1) << endl;
+        int type, l, r; cin >> type >> l >> r;
+        if (type & 1)
+            update(l + N - 1, r);
+        else
+            cout << range(l + N - 1, r + N - 1) << endl;
     }
 
     return 0;
