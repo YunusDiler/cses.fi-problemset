@@ -12,25 +12,15 @@ int32_t main() {
     vector<int> v(n);
     for (int i = 0; i < n; i++) cin >> v[i];
     
-    int i = 0, j = 0, sum = v[0], ans = 0;
-    while (i < n && j <s n)
+    int ans = LLONG_MAX;
+
+    int l = 1, r = 1e18 + 1;
+    while (l <= r)
     {
-        if (sum == t) 
-        {
-            ans++;
-            i++;
-            sum += v[i];
-        }
-        else if (sum < t)
-        {
-            i++;
-            sum += v[i];
-        }
-        else
-        {
-            sum -= v[j];
-            j++;
-        }
+        int mid = (l + r) / 2, count = 0;
+        for (auto i : v) {count += mid / i; if (count >= t) {ans = min(ans, mid); r = mid - 1; break;}}
+        if (count < t) l = mid + 1;
+        else {ans = min(ans, mid); r = mid - 1;}
     }
     
     cout << ans;

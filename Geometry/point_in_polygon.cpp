@@ -39,12 +39,34 @@ bool intersect(point a, point b, point c, point d) {
 int32_t main() {
     need_for_speed
     
-    ll n, x1, y1, x2, y2, x3, y3, x4, y4; cin >> n;
-    while (n--)
+    ll n, m; cin >> n >> m;
+    vector<point> v(n);
+    vector<point> q(m);
+ 
+    for (int i = 0; i < n; i++) cin >> v[i].x >> v[i].y;
+    v.push_back(v[0]);
+    for (int i = 0; i < m; i++) cin >> q[i].x >> q[i].y;
+ 
+
+    for (auto& i : q)
     {
-        cin >> x1 >> y1 >> x2 >> y2 >> x3 >> y3 >> x4 >> y4;
-        if (intersect({x1, y1}, {x2, y2}, {x3, y3}, {x4, y4})) cout << "YES\n";
-        else cout << "NO\n";
+        point p = {i.x + 1, i.y + 3000000000};
+        ll cross = 0;
+        bool b = false;
+        for (int j = 0; j < n; j++)
+        {
+            if (on_segment(v[j], i, v[j + 1]) && ccw(v[j], i, v[j + 1]) == 0)
+            {
+                cout << "BOUNDARY" << endl;
+                b = true;
+                break;
+            }
+ 
+            if (intersect(p, i, v[j], v[j + 1])) cross++;
+        }
+        if (b) continue;
+        if (cross & 1) cout << "INSIDE" << endl;
+        else cout << "OUTSIDE" << endl;
     }
     
     return 0;
