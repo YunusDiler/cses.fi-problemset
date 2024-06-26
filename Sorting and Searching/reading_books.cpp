@@ -5,19 +5,16 @@
 
 using namespace std;
 
+ 
 int32_t main() {
     need_for_speed
+
+    long long n, sum = 0; cin >> n;
+    long long m = 0, x;
+    for (int i = 0; i < n; i++) {cin >> x; sum += x; m = max(m, x);}
     
-    int n; cin >> n;
-    vector<int> v(n);
-    for (int i = 0; i < n; i++) cin >> v[i];
-    
-    sort(v.begin(), v.end());
-    
-    int sum = 0;
-    for (int i = 0; i < n - 1; i++) sum += v[i];
-    if (v[n - 1] > sum) cout << 2 * v[n - 1];
-    else cout << sum + v[n - 1];
+    if (2 * m > sum) cout << 2 * m;
+    else cout << sum;
     
     return 0;
 }
