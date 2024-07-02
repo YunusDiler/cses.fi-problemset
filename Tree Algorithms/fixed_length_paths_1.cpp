@@ -1,85 +1,102 @@
-#include "bits/stdc++.h"
-#define ll long long
+#pragma GCC optimize("O3,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
+#include <bits/stdc++.h>
+
 using namespace std;
-const int N = 1e5+5;
-bool ban[N];
-int sub[N];
-vector<int> adj[N];
  
-void precompute(int nd, int pr){
-    sub[nd] = 1;
-    for (auto to: adj[nd]){
-        if (to == pr or ban[to])
-            continue;
-        precompute(to, nd);
-        sub[nd] += sub[to];
+
+const int MOD = 1e9 + 7;
+const int N = 2e5+1;
+ 
+int n, k, a, b, deepest, sub[N];
+vector<int> tree[N];
+bitset<N> banned;
+long long ans;
+int counter[N];
+
+void dfs2(int node, int parent, int r = 1, bool flag = false){
+    if (flag) ans += counter[k - r];
+    else ++counter[r];
+    deepest = max(deepest, r);
+    for(auto& child: tree[node]){
+        if(child == parent || banned[child]) continue;
+        if (r + 1 > k) continue;
+        dfs2(child, node, r + 1, flag);
     }
 }
- 
-int centroid(int nd, int pr, int sz){
-    for (auto to: adj[nd]){
-        if (to == pr or ban[to])
-            continue;
-        if (sub[to] > sz/2)
-            return centroid(to, nd, sz);
+
+void solve(int cntr){
+    fill(counter + 1, counter + deepest + 1, 0);
+    for(auto& nd: tree[cntr]){
+        if(banned[nd]) continue;
+        dfs2(nd, cntr, 1, 1);
+        dfs2(nd, cntr, 1, 0);
     }
-    return nd;
+    ans += counter[k];
 }
  
-int n, k;
-ll answer;
-map<int,int> cnt;
  
-void upd(int nd, int pr, int r = 1){
-    cnt[r] += 1;
-    for (auto to: adj[nd]){
-        if (to == pr or ban[to])
-            continue;
-        upd(to, nd, r+1);
+int calc(int node, int parent){
+    sub[node] = 1;
+    for(auto& child: tree[node]){
+        if(child == parent || banned[child]) continue;
+        sub[node] += calc(child, node);
     }
+ 
+    return sub[node];
 }
  
-void get(int nd, int pr, int r = 1){
-    answer += cnt[k - r];
-    for (auto to: adj[nd]){
-        if (to == pr or ban[to])
-            continue;
-        get(to, nd, r+1);
+ 
+ 
+int centroid(int node, int parent, int sz){
+    for(auto& child: tree[node]){
+        if(child == parent || banned[child]) continue;
+        if(sub[child] > (sz>>1))return centroid(child, node, sz);
     }
-}
-void solve(int l){
-    cnt.clear();
-    for (auto to: adj[l]){
-        if (ban[to])
-            continue;
-        get(to, l);
-        upd(to, l);
-    }
-    //u is l
-    answer += cnt[k];
+ 
+    return node;
 }
  
-void build(int nd, int par_centr){
-    precompute(nd, -1);
-    int centr = centroid(nd, -1, sub[nd]);
-    ban[centr] = 1;
+void build(int node, int parent){
  
-    solve(centr);
+    calc(node, parent);
+    int cntr = centroid(node, parent, sub[node]);
+    banned[cntr] = true;
  
-    for (auto to: adj[centr])
-        if (!ban[to])
-            build(to, centr);
+    //cout << cntr << " " << parent << endl;
+ 
+    solve(cntr);
+ 
+    for(auto& child: tree[cntr]){
+        if(child == parent || banned[child]) continue;
+        build(child, cntr);
+    }
+ 
 }
  
-int main(){
-    // freopen("file.in", "r", stdin);
-    scanf("%d%d", &n, &k);
-    for (int i = 1; i < n; i++){
-        int u, v;
-        scanf("%d%d", &u, &v);
-        adj[u].push_back(v);
-        adj[v].push_back(u);
+int32_t main(){
+ 
+    //fri("in.txt");
+    //fro("out.txt");
+ 
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+ 
+    cin >> n >> k;
+ 
+    for(int i = 0; i < n - 1; i++){
+        cin >> a >> b;
+        tree[a].push_back(b);
+        tree[b].push_back(a);
     }
+ 
     build(1, -1);
-    printf("%lld\n", answer);
+ 
+    cout << ans << endl;
+ 
+ 
+ 
+ 
+    return 0;
 }
