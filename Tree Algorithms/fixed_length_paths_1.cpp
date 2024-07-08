@@ -1,10 +1,8 @@
-#pragma GCC optimize("O3,unroll-loops")
-#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
-
+ 
 using namespace std;
  
-
+ 
 const int MOD = 1e9 + 7;
 const int N = 2e5+1;
  
@@ -13,7 +11,7 @@ vector<int> tree[N];
 bitset<N> banned;
 long long ans;
 int counter[N];
-
+ 
 void dfs2(int node, int parent, int r = 1, bool flag = false){
     if (flag) ans += counter[k - r];
     else ++counter[r];
@@ -24,7 +22,7 @@ void dfs2(int node, int parent, int r = 1, bool flag = false){
         dfs2(child, node, r + 1, flag);
     }
 }
-
+ 
 void solve(int cntr){
     fill(counter + 1, counter + deepest + 1, 0);
     for(auto& nd: tree[cntr]){
