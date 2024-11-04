@@ -1,44 +1,62 @@
 #include <bits/stdc++.h>
 
 #define int long long
-#define need_for_speed ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+#define endl '\n'
 
 using namespace std;
 
-struct Edge {
-    int weigth;
-    int from;
-    int to;
-};
-
-
-vector<int> dist(2501, LLONG_MIN);
-
 int32_t main() {
-    need_for_speed
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
     
     int n, m; cin >> n >> m;
-    vector<Edge> v(m + 1);
-    for (int i = 1; i <= m; i++)
-        cin >> v[i].from >> v[i].to >> v[i].weigth;
+    vector<vector<pair<int, int>>> adj(n + 1);
+    for (int i = 0; i < m; i++) {
+       int from, to, cost; cin >> from >> to >> cost;
+       adj[from].push_back({to, cost});
+    }
     
-    dist[1] = 0;
+    vector<int> dist(n + 1, LLONG_MIN);
+    vector<int> visit_count(n + 1);
+    vector<bool> in_queue(n + 1);
+    vector<int> parent(n + 1, -1);
+    vector<bool> is_cycle(n + 1);
+    queue<int> q;
 
-    for (int i = 1; i <= n; i++)
-    {
-        for (int j = 1; j <= m; j++)
-        {
-            int l = v[j].from, r = v[j].to, w = v[j].weigth;
-            if (dist[l] != LLONG_MIN && dist[l] + w > dist[r]) dist[r] = dist[l] + w;
-        }
-        for (int j = 1; j <= m; j++)
-        {
-            int l = v[j].from, r = v[j].to, w = v[j].weigth;
-            if (dist[l] != LLONG_MIN && dist[l] + w > dist[r]) 
-            if (r == n) {cout << -1; return 0;}
+    dist[1] = 0;
+    q.push(1);
+    in_queue[1] = true;
+
+    while(!q.empty()) {
+        int from = q.front();
+        q.pop();
+        in_queue[from] = false;
+
+        for (auto [to, cost] : adj[from]) {
+            if (visit_count[to] > n) {
+                is_cycle[to] = true;
+                for (auto [next, t] : adj[to]) {
+                    is_cycle[next] = true;
+                }
+                continue;
+            }
+
+            if (dist[to] < dist[from] + cost) {
+                dist[to] = dist[from] + cost;
+                parent[to] = from;
+                if (!in_queue[to]) q.push(to);
+                visit_count[to]++;
+            }
         }
     }
 
+    for (int i = n; ~i; i = parent[i]) {
+        if (is_cycle[i]) {
+            cout << -1;
+            return 0;
+        }
+    }
     cout << dist[n];
     
     return 0;
