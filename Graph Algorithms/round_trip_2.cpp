@@ -15,7 +15,6 @@ vector<int> parent(MAXN);
 int cycle_start = 0, cycle_end = 0;
 
 void dfs(int u) {
-  if (cycle_end) return;
   color[u] = 1;
   for (auto v : adj[u]) {
     if (cycle_end) return;
