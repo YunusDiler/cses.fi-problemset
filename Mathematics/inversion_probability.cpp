@@ -1,3 +1,6 @@
+// WA: because of precision error hacks. Why p/q mod m is not allowed !!!!!
+// AC in python with Decimal library with more precision, in c++ boost also allow this but cses does not allow boost
+
 #include <bits/stdc++.h>
  
 #define int long long
