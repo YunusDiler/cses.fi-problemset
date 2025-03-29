@@ -1,6 +1,7 @@
 # Ignore in.txt and out.txt files in all subdirectories
 **/in.txt
 **/out.txt
+**/*.exe
 
 # Ignore the .vscode folder
 .vscode/
