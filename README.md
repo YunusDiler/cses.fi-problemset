@@ -26,7 +26,7 @@ Each category is organized into its own folder, mirroring the official structure
 
 ---
 
-## 🔰 Introductory Problems (CSES Order)
+## 🔰 Introductory Problems
 
 Solutions from the **Introductory Problems** section:
 
@@ -42,28 +42,15 @@ Solutions from the **Introductory Problems** section:
 10. [Trailing Zeros](./Introductry%20Problems/Trailing%20Zeros.cpp)
 11. [Coin Piles](./Introductry%20Problems/Coin%20Piles.cpp)
 12. [Palindrome Reorder](./Introductry%20Problems/Palindrome%20Reorder.cpp)
-13. [Digit Queries](./Introductry%20Problems/Digit%20Queries.cpp)
-14. [Apple Division](./Introductry%20Problems/Apple%20Division.cpp)
-15. [Gray Code](./Introductry%20Problems/Gray%20Code.cpp)
-16. [Tower of Hanoi](./Introductry%20Problems/Tower%20of%20Hanoi.cpp)
-17. [Creating Strings](./Introductry%20Problems/Creating%20Strings.cpp)
-18. [Chessboard and Queens](./Introductry%20Problems/Chessboard%20and%20Queens.cpp)
-19. [Raab Game I](./Introductry%20Problems/Raab%20Game%20I.cpp)
-19. [Grid Paths](./Introductry%20Problems/Grid%20Paths.cpp)
-
-🧪 Also in this folder:
-- [Grid Coloring I](./Introductry%20Problems/Grid%20Coloring%20I.cpp)
-- [Knight Moves Grid](./Introductry%20Problems/Knight%20Moves%20Grid.cpp)
-- [Mex Grid Construction](./Introductry%20Problems/Mex%20Grid%20Construction.cpp)
-- [String Reorder](./Introductry%20Problems/String%20Reorder.cpp)
-
----
-
-## ⚙️ How to Compile and Run
-
-Make sure you have `g++` or another C++ compiler installed.
-
-Example (Linux/macOS/Windows with Git Bash):
-
-```bash
-g++ "Introductry Problems/Weird Algorithm.cpp" -o weird && ./weird
+13. [Apple Division](./Introductry%20Problems/Apple%20Division.cpp)
+14. [Gray Code](./Introductry%20Problems/Gray%20Code.cpp)
+15. [Tower of Hanoi](./Introductry%20Problems/Tower%20of%20Hanoi.cpp)
+16. [Creating Strings](./Introductry%20Problems/Creating%20Strings.cpp)
+17. [Chessboard and Queens](./Introductry%20Problems/Chessboard%20and%20Queens.cpp)
+18. [Raab Game I](./Introductry%20Problems/Raab%20Game%20I.cpp)
+19. [Mex Grid Construction](./Introductry%20Problems/Mex%20Grid%20Construction.cpp)
+20. [Knight Moves Grid](./Introductry%20Problems/Knight%20Moves%20Grid.cpp)
+21. [Grid Coloring I](./Introductry%20Problems/Grid%20Coloring%20I.cpp)
+22. [Digit Queries](./Introductry%20Problems/Digit%20Queries.cpp)
+23. [String Reorder](./Introductry%20Problems/String%20Reorder.cpp)
+24. [Grid Paths](./Introductry%20Problems/Grid%20Paths.cpp)
