@@ -1,23 +1,9 @@
-/*
-
-HI, I think there is a little mistake in analysis part of the problem.
-It says n + 1 left and n - 1 right brackets but I think it should be n/2 + 1 and n/2 -1 
-If I'm dumb just ignore this busted hack
-
-Edit:
-Yes I'm dumb I did submit that twice, first without checking parity :D
-*/
-
-
-
-
-
-
 #include <bits/stdc++.h>
 
 #define endl '\n'
 
 using namespace std;
+
 
 template <typename T>
 T inverse(T a, T m) {
@@ -174,18 +160,77 @@ U& operator>>(U& stream, Modular<T>& number) {
 constexpr int md = 1e9 + 7;
 using Mint = Modular<std::integral_constant<decay<decltype(md)>::type, md>>;
 
-vector<Mint> fact(1, 1);
-vector<Mint> inv_fact(1, 1);
+// vector<Mint> fact(1, 1);
+// vector<Mint> inv_fact(1, 1);
 
-Mint C(int n, int k) {
-  if (k < 0 || k > n) {
-    return 0;
+// Mint C(int n, int k) {
+//   if (k < 0 || k > n) {
+//     return 0;
+//   }
+//   while ((int) fact.size() < n + 1) {
+//     fact.push_back(fact.back() * (int) fact.size());
+//     inv_fact.push_back(1 / fact.back());
+//   }
+//   return fact[n] * inv_fact[k] * inv_fact[n - k];
+// }
+
+
+template <typename T, size_t N, size_t M, size_t K>
+array<array<T, K>, N> operator*(const array<array<T, M>, N>& a, const array<array<T, K>, M>& b) {
+  array<array<T, K>, N> c;
+  for (size_t i = 0; i < N; i++) {
+    for (size_t j = 0; j < K; j++) {
+      c[i][j] = 0;
+      for (size_t k = 0; k < M; k++) {
+        c[i][j] += a[i][k] * b[k][j];
+      }
+    }
   }
-  while ((int) fact.size() < n + 1) {
-    fact.push_back(fact.back() * (int) fact.size());
-    inv_fact.push_back(1 / fact.back());
+  return c;
+}
+
+template <typename T>
+vector<vector<T>> operator*(const vector<vector<T>>& a, const vector<vector<T>>& b) {
+  if (a.empty() || b.empty()) {
+    return {{}};
   }
-  return fact[n] * inv_fact[k] * inv_fact[n - k];
+  vector<vector<T>> c(a.size(), vector<T>(b[0].size()));
+  for (int i = 0; i < static_cast<int>(c.size()); i++) {
+    for (int j = 0; j < static_cast<int>(c[0].size()); j++) {
+      c[i][j] = 0;
+      for (int k = 0; k < static_cast<int>(b.size()); k++) {
+        c[i][j] += a[i][k] * b[k][j];
+      }
+    }
+  }
+  return c;
+}
+
+template <typename T>
+vector<vector<T>>& operator*=(vector<vector<T>>& a, const vector<vector<T>>& b) {
+  return a = a * b;
+}
+
+template <typename T, typename U>
+vector<vector<T>> power(const vector<vector<T>>& a, const U& b) {
+  assert(b >= 0);
+  vector<U> binary;
+  U bb = b;
+  while (bb > 0) {
+    binary.push_back(bb & 1);
+    bb >>= 1;
+  }
+  vector<vector<T>> res(a.size(), vector<T>(a.size()));
+  for (int i = 0; i < static_cast<int>(a.size()); i++) {
+    res[i][i] = 1;
+  }
+  for (int j = (int) binary.size() - 1; j >= 0; j--) {
+    res *= res;
+    if (binary[j] == 1) {
+      res *= a;
+    }
+  }
+  return res;
 }
 
 
@@ -194,14 +239,16 @@ int32_t main() {
   cin.tie(0);
   cout.tie(0);
   
-  int n; cin >> n;
-
-  if (n % 2 == 1) {
-    cout << 0;
-    return 0;
+  int n, m, k; cin >> n >> m >> k;
+  vector<vector<Mint>> mat(n, vector<Mint>(n));
+  
+  while (m--) {
+    int a, b; cin >> a >> b;
+    a--; b--;
+    mat[a][b] += 1;
   }
-
-  Mint ans = C(n, n / 2) * Mint(2) / Mint(n + 2);
-  cout << ans;
+  auto ans = power(mat, k);
+  cout << ans[0][n - 1];
+  
   return 0;
 }
