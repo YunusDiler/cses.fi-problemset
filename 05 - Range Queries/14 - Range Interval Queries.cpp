@@ -1,89 +1,119 @@
 #include <bits/stdc++.h>
  
 using namespace std;
-
-class FenwickTree {
- public:
-  vector<int> fenw;
-  int n;
-
-  FenwickTree() : n(0) {}
-  FenwickTree(int n_) : n(n_) {
-    fenw.resize(n);
+ 
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+ 
+using namespace __gnu_pbds;
+ 
+typedef tree<int, null_type, less_equal<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
+ 
+// fast IO
+struct _istream {
+#define getchar getc
+  bool eof;
+  char buf[200000], *p1, *p2;
+  inline operator bool() { return !eof; }
+  inline char getc() {
+    return p1 == p2 && (p2 = (p1 = buf) + fread(buf, 1, 200000, stdin), p1 == p2) ? EOF : *p1++;
   }
-
-  void Modify(int x, int v) {
-    assert(0 <= x && x <= n);
-    while (x < n) {
-      fenw[x] += v;
-      x |= x + 1;
+  template <typename T>
+  inline _istream& operator>>(T& re) {
+    re = 0;
+    char c = getchar();
+    bool neg = 0;
+    while (!isdigit(c)) {
+      if (c == EOF) {
+        eof = 1;
+        return *this;
+      }
+      if (c == '-') neg = 1;
+      c = getchar();
     }
-  }
-
-  int Query(int x) {
-    assert(0 <= x && x <= n);
-    int v{};
-    while (x > 0) {
-      v += fenw[x - 1];
-      x &= x - 1;
+    while (isdigit(c)) {
+      re = re * 10 + c - '0';
+      c = getchar();
     }
-    return v;
+    re = (neg ? -re : re);
+    return *this;
   }
-
-  int Range(int l, int r) {
-    return Query(r + 1) - Query(l);
+  _istream() : eof(0) { p1 = p2 = buf; }
+} rit;
+ 
+struct _ostream {
+#define putchar putchar_unlocked
+  inline _ostream& operator<<(const char c) {
+    putchar(c);
+    return *this;
   }
-};
-
+  inline _ostream& operator<<(const char* s) {
+    while (*s != '\0') putchar(*s++);
+    return *this;
+  }
+  inline _ostream& operator<<(const string s) {
+    for (const auto& i : s) putchar(i);
+    return *this;
+  }
+  template <typename T>
+  inline _ostream& operator<<(T x) {
+    if (x < 0) {
+      putchar('-');
+      x = -x;
+    }
+    char s[25];
+    size_t len = 0;
+    do s[len++] = x % 10 + 48;
+    while (x /= 10);
+    while (len) putchar(s[--len]);
+    return *this;
+  }
+} wit;
+#define cin rit
+#define cout wit
+#define endl '\n'
+#define istream _istream
+#define ostream _ostream
+ 
+ 
+int v[200031];
+ 
 int32_t main() {
-  ios_base::sync_with_stdio(0);
-  cin.tie(0);
-  cout.tie(0);
-
   int n, q; cin >> n >> q;
-  vector<int> v(n);
-  vector<int> s(n);
-  for (int i = 0; i < n; i++) {
-    cin >> v[i];
-    s[i] = v[i];
-  }
-  vector<array<int, 4>> qs(q);
-  vector<int> id(q);
-  iota(id.begin(), id.end(), 0);
+  for (int i = 0; i < n; i++) cin >> v[i];
+  vector<array<int, 4>> qs(q), qss(q);
   vector<int> ans(q);
  
   for (int i = 0; i < q; i++) {
-    cin >> qs[i][0] >> qs[i][1] >> qs[i][2] >> qs[i][3];
-    s.push_back(qs[i][2]);
-    s.push_back(qs[i][3]);
+    cin >> qs[i][0] >> qss[i][0] >> qs[i][1] >> qs[i][2];
+    qs[i][3] = i;
+    qss[i][3] = i;
+    qss[i][1] = qs[i][1];
+    qss[i][2] = qs[i][2];
   }
-  sort(s.begin(), s.end());
-  s.erase(unique(s.begin(), s.end()), s.end());
-  auto idx = [&](int x){return lower_bound(s.begin(), s.end(), x) - s.begin();};
-
  
-  sort(id.begin(), id.end(), [&](int& a, int& b){return qs[a][0] < qs[b][0];});
+  sort(qs.begin(), qs.end());
+  sort(qss.begin(), qss.end());
   int qit = 0;
-  FenwickTree ft((int) s.size() + 1);
+  ordered_set s;
   for (int i = 0; i < n; i++) {
-    while (qit < q && qs[id[qit]][0] == i + 1) {
-      int c = qs[id[qit]][2], d = qs[id[qit]][3];
-      int x = ft.Range(idx(c), idx(d));
-      ans[id[qit]] -= x;
+    while (qit < q && qs[qit][0] == i + 1) {
+      int c = qs[qit][1], d = qs[qit][2];
+      int x = s.order_of_key(d + 1) - s.order_of_key(c);
+      ans[qs[qit][3]] -= x;
       qit++;
     }
-    ft.Modify(idx(v[i]), 1);
+    s.insert(v[i]);
   }
-  
-  sort(id.begin(), id.end(), [&](int& a, int& b){return qs[a][1] < qs[b][1];});
-  ft = FenwickTree((int) s.size() + 1);
+ 
+  ordered_set ss;
   qit = 0;
   for (int i = 0; i < n; i++) {
-    ft.Modify(idx(v[i]), 1);
-    while (qit < q && qs[id[qit]][1] == i + 1) {
-      int c = qs[id[qit]][2], d = qs[id[qit]][3];
-      int x = ft.Range(idx(c), idx(d));
-      ans[id[qit]] += x;
+    ss.insert(v[i]);
+    while (qit < q && qss[qit][0] == i + 1) {
+      int c = qss[qit][1], d = qss[qit][2];
+      int x = ss.order_of_key(d + 1) - ss.order_of_key(c);
+      ans[qss[qit][3]] += x;
       qit++;
     }
   }
